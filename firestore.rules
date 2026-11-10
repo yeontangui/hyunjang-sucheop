@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 허락된 두 계정만 읽고 쓸 수 있음
+    function allowed() {
+      return request.auth != null && request.auth.token.email_verified == true &&
+        request.auth.token.email in ['jtshim71@gmail.com', 'a23443196@gmail.com'];
+    }
+    match /{document=**} {
+      allow read, write: if allowed();
+    }
+  }
+}
